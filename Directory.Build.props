@@ -89,6 +89,11 @@
   <!-- Provides package dependency version properties and verification/auto-upgrade configuration -->
   <Import Project="$(RepositoryEngineeringDir)dependencies.props" />
 
+  <PropertyGroup>
+    <DisableRepoRestore Condition="$(MSBuildProjectFullPath.Contains('\tests\')) or $(MSBuildProjectFullPath.Contains('/tests/'))">true</DisableRepoRestore>
+  </PropertyGroup>
+
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Build.Tasks.Configuration" />
   <Import Condition="'$(DisableRepoRestore)' != 'true'" Project="$(RepositoryEngineeringDir)repoRestore.props" />
 
   <!-- Common repo directories -->
