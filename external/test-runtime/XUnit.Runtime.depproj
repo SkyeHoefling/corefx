@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup Condition="'$(TargetGroup)' == 'uap' OR '$(TargetGroup)' == 'uapaot'">
+  <PropertyGroup Condition="'$(TargetGroup)' == 'uap'">
     <TargetFramework>netstandard2.0</TargetFramework>
     <!-- reset parts so that they can be re-inferred -->
     <TargetFrameworkIdentifier />
@@ -12,17 +12,7 @@
     <!-- Use xunit for arm packages because of not providing armel package in win10 -->
     <RuntimeIdentifier Condition="'$(ArchGroup)' == 'armel'">win10-arm</RuntimeIdentifier>
     <OutputPath>$(RuntimePath)</OutputPath>
-    <XUnitRunnerConsolePackageName>xunit.runner.console</XUnitRunnerConsolePackageName>
-    <XUnitRunner>xunit.console</XUnitRunner>
-    <XUnitTestAdapterPackageId>xunit.runner.visualstudio</XUnitTestAdapterPackageId>
-    <XUnitAdapter Condition="'$(TargetGroup)' == 'netcoreapp'">xunit.runner.visualstudio.dotnetcore.testadapter</XUnitAdapter>
-    <XUnitAdapter Condition="'$(TargetGroup)' == 'uap' OR '$(TargetGroup)' == 'uapaot'">xunit.runner.visualstudio.uwp.testadapter</XUnitAdapter>
-    <XUnitAdapter Condition="'$(TargetGroup)' == 'netfx'">xunit.runner.visualstudio.testadapter</XUnitAdapter>
     <MicrosoftDotNetUapTestToolsPackageName>microsoft.dotnet.uap.testtools</MicrosoftDotNetUapTestToolsPackageName>
-    <MicrosoftNetTestSdkPackageName>microsoft.net.test.sdk</MicrosoftNetTestSdkPackageName>
-    <TestPlatformHostPackageId>microsoft.testplatform.testhost</TestPlatformHostPackageId>
-    <MicrosoftDiagnosticsTracingTraceEventPackageName>Microsoft.Diagnostics.Tracing.TraceEvent</MicrosoftDiagnosticsTracingTraceEventPackageName>
-    <TestPlatformHost>testhost</TestPlatformHost>
     <!-- Explicitly set Language to c# to handle the analyzer resolution in nuget -->
     <Language Condition="'$(Language)' == ''">c#</Language>
     <!-- Don't warn if some dependencies were rolled forward -->
@@ -30,97 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- xunit packages -->
-    <PackageReference Include="xunit" Version="$(XUnitPackageVersion)" />
-    <PackageReference Condition="'$(TargetsAot)' == 'true'" Include="xunit.runner.utility" Version="$(XUnitPackageVersion)" />
-    <PackageReference Include="$(MicrosoftDotNetXUnitExtensionsPackage)" Version="$(MicrosoftDotNetXUnitExtensionsPackageVersion)" />
-    <PackageReference Include="$(MicrosoftDotNetRemoteExecutorPackage)" Version="$(MicrosoftDotNetRemoteExecutorPackageVersion)" IncludeAssets="build" ExcludeAssets="none" />
-    <PackageReference Condition="'$(TargetsNetCoreApp)' == 'true'" Include="$(MicrosoftDotNetXUnitConsoleRunnerPackage)" Version="$(MicrosoftDotNetXUnitConsoleRunnerPackageVersion)" />
-    <PackageReference Condition="'$(TargetsNetFx)' == 'true'" Include="$(XUnitRunnerConsolePackageName)" Version="$(XUnitPackageVersion)" />
     <PackageReference Condition="'$(TargetsUap)' == 'true'" Include="$(MicrosoftDotNetUapTestToolsPackageName)" Version="$(MicrosoftDotNetUapTestToolsPackageVersion)" />
-    <PackageReference Include="Microsoft.Diagnostics.Runtime" Version="1.0.5" />
-
-    <!-- for callstack line numbers -->
-    <PackageReference Include="Microsoft.DiaSymReader.Native" Version="1.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
-
-    <!-- Test Data -->
-    <PackageReference Include="System.IO.Compression.TestData" Version="1.0.8" />
-    <PackageReference Include="System.IO.Packaging.TestData" Version="1.0.1" />
-    <PackageReference Include="System.Security.Cryptography.X509Certificates.TestData" Version="1.0.3" />
-    <PackageReference Include="System.Net.TestData" Version="1.0.2" />
-    <PackageReference Include="System.ComponentModel.TypeConverter.TestData" Version="1.0.1" />
-    <PackageReference Include="System.Drawing.Common.TestData" Version="1.0.9" />
-    <PackageReference Include="System.Text.RegularExpressions.TestData" Version="1.0.3" />
-    <PackageReference Include="System.Windows.Extensions.TestData" Version="1.0.2" />
-
-    <PackageToInclude Include="xunit.abstractions" />
-    <PackageToInclude Include="xunit.assert" />
-    <PackageToInclude Include="xunit.extensibility.core" />
-    <PackageToInclude Include="xunit.extensibility.execution" />
-    <PackageToInclude Include="xunit.runner.utility" />
-    <PackageToInclude Include="Microsoft.Diagnostics.Runtime" />
-    <PackageToInclude Include="$(MicrosoftDotNetXUnitExtensionsPackage)" />
-    <PackageToInclude Include="$(MicrosoftDotNetRemoteExecutorPackage)" />
-    <PackageToInclude Condition="'$(TargetsNetCoreApp)' == 'true'" Include="$(MicrosoftDotNetXUnitConsoleRunnerPackage)" />
-    <PackageToInclude Condition="'$(TargetsNetFx)' == 'true'" Include="$(XUnitRunnerConsolePackageName)" />
-    <PackageToInclude Include="Microsoft.DiaSymReader.Native" />
-    <PackageToInclude Include="Newtonsoft.Json" />
-  </ItemGroup>
-
-  <!-- Microsoft.Diagnostics.Tracing testing -->
-  <ItemGroup Condition="'$(TargetGroup)' != 'uap' AND '$(TargetGroup)' != 'uapaot'">
-    <PackageReference Include="$(MicrosoftDiagnosticsTracingTraceEventPackageName)" Version="$(TraceEventPackageVersion)" />
-    
-    <PackageToInclude Include="$(MicrosoftDiagnosticsTracingTraceEventPackageName)"/>
-  </ItemGroup>
-
-  <!-- Microsoft.NET.Test.SDK packages. -->
-  <ItemGroup Condition="'$(EnableVSTestReferences)' == 'true'">
-    <PackageReference Include="$(XUnitTestAdapterPackageId)" Version="$(XUnitPackageVersion)" />
-    <PackageReference Include="$(MicrosoftNetTestSdkPackageName)" Version="$(MicrosoftNETTestSdkPackageVersion)" />
-    <PackageReference Condition="'$(TargetsNetFx)' != 'true'" Include="$(TestPlatformHostPackageId)" Version="$(MicrosoftNETTestSdkPackageVersion)" />
-    <PackageReference Condition="'$(TargetsNetFx)' != 'true'" Include="Microsoft.TestPlatform.ObjectModel" Version="$(MicrosoftNETTestSdkPackageVersion)" />
-    <PackageReference Condition="'$(TargetsNetCoreApp)' == 'true'" Include="Microsoft.Extensions.DependencyModel" Version="2.0.4" />
-    <PackageReference Condition="'$(TargetsNetCoreApp)' == 'true' OR '$(TargetsNetFx)' == 'true'" Include="Microsoft.CodeCoverage" Version="$(MicrosoftNETTestSdkPackageVersion)" />
-
-    <PackageToInclude Include="$(XUnitTestAdapterPackageId)" />
-    <PackageToInclude Condition="'$(TargetsNetFx)' != 'true'" Include="Microsoft.TestPlatform.TestHost" />
-    <PackageToInclude Condition="'$(TargetsNetFx)' != 'true'" Include="Microsoft.TestPlatform.ObjectModel" />
-    <PackageToInclude Condition="'$(TargetsNetCoreApp)' == 'true'" Include="Microsoft.Extensions.DependencyModel" />
-    <PackageToInclude Condition="'$(TargetsNetCoreApp)' == 'true' OR '$(TargetsNetFx)' == 'true'" Include="Microsoft.CodeCoverage" />
-  </ItemGroup>
-
-  <!--
-    Ensure that the native components of TraceEvent are restored into the testhost
-    so that TraceEvent can pinvoke into them.
-  -->
-  <Target Name="CopyTraceEventNativeFiles"
-          Condition="'$(TargetGroup)' == 'netcoreapp' OR '$(TargetGroup)' == 'netfx'"
-          AfterTargets="AfterResolveReferences">
-
-    <ItemGroup>
-      <TraceEventNativeFiles Include="$(NuGetPackageRoot)$(MicrosoftDiagnosticsTracingTraceEventPackageName)\$(TraceEventPackageVersion)\lib\native\**\*.*" />
-    </ItemGroup>
-
-    <PropertyGroup>
-      <TraceEventDestinationFolder Condition="'$(TargetGroup)' == 'netcoreapp'">$(NETCoreAppTestSharedFrameworkPath)</TraceEventDestinationFolder>
-      <TraceEventDestinationFolder Condition="'$(TargetGroup)' == 'netfx'">$(TestHostRootPath)</TraceEventDestinationFolder>
-    </PropertyGroup>
-
-    <Copy SourceFiles="@(TraceEventNativeFiles)"
-          DestinationFolder="$(TraceEventDestinationFolder)%(RecursiveDir)"
-          SkipUnchangedFiles="true" />
-
-  </Target>
-
-  <!-- System.Data.SqlClient tests require sni.dll in the test folder -->
-  <ItemGroup Condition="'$(TargetsAot)' == 'true'">
-    <PackageReference Include="runtime.native.System.Data.SqlClient.sni" Version="$(RuntimeWinX64RuntimeNativeSystemDataSqlClientSniPackageVersion)" />
-
-    <PackageToInclude Include="runtime.win-arm64.runtime.native.System.Data.SqlClient.sni"/>
-    <PackageToInclude Include="runtime.win-x64.runtime.native.System.Data.SqlClient.sni"/>
-    <PackageToInclude Include="runtime.win-x86.runtime.native.System.Data.SqlClient.sni"/>
   </ItemGroup>
 
   <!-- Retrieve the UAP Tools to the TestHost folder -->
@@ -153,6 +53,7 @@
 
   </Target>
 
+<<<<<<< HEAD
   <Target Name="AddTestPlatformDependencies"
           Condition="'$(EnableVSTestReferences)' == 'true'"
           BeforeTargets="ResolveReferences">
@@ -297,4 +198,6 @@
 
   </Target>
 
+=======
+>>>>>>> Add restore assets for test projects
 </Project>

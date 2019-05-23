@@ -107,13 +107,6 @@
     <SourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'src'))</SourceDir>
   </PropertyGroup>
 
-  <!-- Default properties for CI builds -->
-  <PropertyGroup Condition="'$(IsTestProject)' == 'true' and '$(ContinuousIntegrationBuild)' == 'true' and '$(OfficialBuildId)' == ''">
-    <WithoutCategories>IgnoreForCI</WithoutCategories>
-    <EnableDumpling>false</EnableDumpling>
-    <CrashDumpFolder Condition="'$(OS)' == 'Windows_NT'">%TMP%\CoreRunCrashDumps</CrashDumpFolder>
-  </PropertyGroup>
-
   <!-- list of nuget package sources passed to nuget restore -->
   <!-- Example to consume local CoreCLR package:
        /p:OverridePackageSource=C:\coreclr\bin\Product\Windows_NT.x64.Debug\.nuget\pkg
@@ -290,9 +283,6 @@
 
     <!-- Suppress preview message as we are usually using preview SDK versions. -->
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-
-    <CLSCompliant Condition="'$(CLSCompliant)'=='' and '$(IsTestProject)'=='true'">false</CLSCompliant>
-    <CLSCompliant Condition="'$(CLSCompliant)'==''">true</CLSCompliant>
     <GenFacadesIgnoreBuildAndRevisionMismatch>true</GenFacadesIgnoreBuildAndRevisionMismatch>
 
     <!-- TODO-NULLABLE: remove CS8609, CS8610 once we consume roslyn that allows nullable covariant overrides -->
@@ -397,10 +387,6 @@
   <PropertyGroup>
     <!-- F5 and debugging support for netcoreapp and netfx inside VS. -->
     <EnableLaunchSettings Condition="'$(EnableLaunchSettings)' == ''AND '$(DotNetBuildFromSource)' != 'true'">true</EnableLaunchSettings>
-
-    <!-- Disable VS Test SDK references if the .NET Native toolchain is used. -->
-    <EnableVSTestReferences Condition="'$(UseDotNetNativeToolchain)' == 'true'">false</EnableVSTestReferences>
-    <EnableVSTestReferences Condition="'$(EnableVSTestReferences)' == ''">true</EnableVSTestReferences>
   </PropertyGroup>
 
   <!-- Test properties for full build. -->
@@ -409,14 +395,6 @@
   </PropertyGroup>
 
   <Import Project="$(RepositoryEngineeringDir)references.props" />
-  <Import Condition="'$(IsTestProject)' == 'true' AND '$(IsTestSupportProject)' != 'true' AND '$(EnableVSTestReferences)' == 'true'" Project="$(RuntimePath)Microsoft.NET.Test.Sdk.props" />
-
-  <ItemDefinitionGroup Condition="'$(IsTestProject)' != 'true'">
-    <!-- Project references for non-test assemblies should never be copied to the output. -->
-    <ProjectReference>
-      <Private>false</Private>
-    </ProjectReference>
-  </ItemDefinitionGroup>
 
   <!-- Import it at the end of the props file to override the OutputPath for reference assemblies and use common directory props -->
   <Import Project="$(RepositoryEngineeringDir)ReferenceAssemblies.props" />
