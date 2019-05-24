@@ -17,6 +17,10 @@
   <PropertyGroup Condition="'$(TargetsAOT)'=='true' AND '$(ArchGroup)'=='wasm'">
     <RuntimeIdentifier>win10-x86</RuntimeIdentifier>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+    <PackageReference Include="Microsoft.DiaSymReader.Native" Version="1.7.0" />
+  </ItemGroup>
     
   <ItemGroup Condition="'$(TargetsAOT)'=='true'">
     <PackageReference Include="Microsoft.TargetingPack.Private.NETNative">
