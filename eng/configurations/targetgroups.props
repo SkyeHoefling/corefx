@@ -13,6 +13,7 @@
       <TargetFrameworkIdentifier>.NETCore</TargetFrameworkIdentifier>
       <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
       <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+      <TargetsAot>true</TargetsAot>
       <TargetingPackNugetPackageId>Microsoft.TargetingPack.Private.NetNative</TargetingPackNugetPackageId>
       <UWPCompatible>true</UWPCompatible>
       <Imports>netcore50</Imports>
@@ -23,6 +24,7 @@
       <TargetFrameworkIdentifier>UAP</TargetFrameworkIdentifier>
       <TargetFrameworkVersion>10.0.16299</TargetFrameworkVersion>
       <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+      <TargetsAot>true</TargetsAot>
       <UWPCompatible>true</UWPCompatible>
       <Imports>netcore50aot</Imports>
       <CompatibleWith>uap10.0.16299;netstandard</CompatibleWith>
@@ -40,6 +42,7 @@
       <TargetFrameworkIdentifier>$(UAPvNextTFI)</TargetFrameworkIdentifier>
       <TargetFrameworkVersion>$(UAPvNextVersion)</TargetFrameworkVersion>
       <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+      <TargetsAot>true</TargetsAot>
       <UWPCompatible>true</UWPCompatible>
       <Imports>uap10.0.16299aot</Imports>
       <CompatibleWith>uapvnext;netstandard2.1</CompatibleWith>
@@ -67,6 +70,7 @@
       <TargetFrameworkIdentifier>$(UAPvNextTFI)</TargetFrameworkIdentifier>
       <TargetFrameworkVersion>$(UAPvNextVersion)</TargetFrameworkVersion>
       <PackageTargetRuntimeSuffix>aot</PackageTargetRuntimeSuffix>
+      <TargetsAot>true</TargetsAot>
       <UWPCompatible>true</UWPCompatible>
       <Imports>uapvnextaot</Imports>
       <CompatibleWith>uap;netstandard2.1</CompatibleWith>
@@ -248,6 +252,7 @@
     <TargetGroups Include="package">
       <!-- this targetgroup is not considered compatible with any other targetgroup so it should only
            build when specified directly or BuildAllConfigurations is set to True.  -->
+      <TargetFramework>none</TargetFramework>
     </TargetGroups>
     <TargetGroups Include="mono">
       <TargetFramework>net463</TargetFramework>
