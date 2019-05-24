@@ -31,15 +31,15 @@
       <Link>Common\System\Threading\Tasks\TaskTimeoutExtensions.cs</Link>
     </Compile>
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetGroup)' == 'netcoreapp'">
+  <ItemGroup Condition="'$(TargetsNetCoreApp)' == 'true'">
     <Compile Include="NamedPipeTests\NamedPipeTest.CurrentUserOnly.netcoreapp.cs" />
     <Compile Include="PipeTest.Read.netcoreapp.cs" />
     <Compile Include="PipeTest.Write.netcoreapp.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetGroup)' == 'netcoreapp' and '$(TargetsWindows)' == 'true'">
+  <ItemGroup Condition="'$(TargetsNetCoreApp)' == 'true' and '$(TargetsWindows)' == 'true'">
     <Compile Include="NamedPipeTests\NamedPipeTest.CurrentUserOnly.netcoreapp.Windows.cs" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetGroup)' == 'netcoreapp' and '$(TargetsUnix)' == 'true'">
+  <ItemGroup Condition="'$(TargetsNetCoreApp)' == 'true' and '$(TargetsUnix)' == 'true'">
     <Compile Include="NamedPipeTests\NamedPipeTest.CurrentUserOnly.netcoreapp.Unix.cs" />
     <Compile Include="NamedPipeTests\NamedPipeTest.UnixDomainSockets.cs" />
   </ItemGroup>
