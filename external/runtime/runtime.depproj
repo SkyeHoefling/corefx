@@ -4,7 +4,7 @@
     <NoWarn>$(NoWarn);NU1603;NU1605</NoWarn>
     <SwapNativeForIL Condition="'$(SwapNativeForIL)' == '' AND ('$(ConfigurationGroup)' == 'Debug' OR '$(Coverage)' == 'true')">true</SwapNativeForIL>
     <!-- uap10.0.16299 is missing IL -->
-    <SwapNativeForIL Condition="'$(TargetGroup)'=='uap10.0.16299' OR '$(TargetsAOT)'=='true'">false</SwapNativeForIL>
+    <SwapNativeForIL Condition="'$(TargetFramework)'=='uap10.0.16299' OR '$(TargetsAOT)'=='true'">false</SwapNativeForIL>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetsAOT)'=='true'">
     <NuGetDeploySourceItem>Reference</NuGetDeploySourceItem>
@@ -14,7 +14,7 @@
   
   <!-- There isn't a WebAssembly runtime package yet, but the Windows AOT package has the right surface area 
   to build against. -->  
-  <PropertyGroup Condition="'$(TargetsAOT)'=='true' AND '$(ArchGroup)'=='wasm'">
+  <PropertyGroup Condition="'$(TargetsAot)'=='true' AND '$(ArchGroup)'=='wasm'">
     <RuntimeIdentifier>win10-x86</RuntimeIdentifier>
   </PropertyGroup>
 
@@ -22,25 +22,25 @@
     <PackageReference Include="Microsoft.DiaSymReader.Native" Version="1.7.0" />
   </ItemGroup>
     
-  <ItemGroup Condition="'$(TargetsAOT)'=='true'">
+  <ItemGroup Condition="'$(TargetsAot)'=='true'">
     <PackageReference Include="Microsoft.TargetingPack.Private.NETNative">
-      <Version Condition="'$(TargetGroup)'=='uapaot'">1.1.0-$(ProjectNTfsExpectedPrerelease)</Version>
+      <Version>1.1.0-$(ProjectNTfsExpectedPrerelease)</Version>
       <!-- Following is version used in release/uwp6.0 -->
-      <Version Condition="'$(TargetGroup)'=='uap10.0.16299aot'">1.1.0-rel-25728-00</Version>
+      <Version Condition="'$(TargetFramework)'=='uap10.0.16299'">1.1.0-rel-25728-00</Version>
     </PackageReference>
     <FileToExclude Include="System.Private.CoreLib.Augments" />
     <FileToExclude Include="System.Private.CoreLib.DynamicDelegate" />
     <FileToExclude Include="System.Private.CoreLib.WinRTInterop" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetsAOT)'!='true'">
+  <ItemGroup Condition="'$(TargetsAot)'!='true'">
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="$(MicrosoftNETCorePlatformsPackageVersion)" />
     <PackageReference Include="transport.Microsoft.NETCore.Runtime.CoreCLR">
       <Version>$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)</Version>
       <!-- Following is version used in release/uwp6.0 -->
-      <Version Condition="'$(TargetGroup)'=='uap10.0.16299'">2.1.0-b-uwp6-25707-02</Version>
+      <Version Condition="'$(TargetFramework)'=='uap10.0.16299'">2.1.0-b-uwp6-25707-02</Version>
     </PackageReference>
-    <PackageReference Condition="'$(TargetGroup)' == 'uap' and '$(DotNetBuildFromSource)' != 'true'" Include="Microsoft.DotNet.UAP.TestTools" Version="$(MicrosoftDotNetUapTestToolsPackageVersion)" GeneratePathProperty="true" />
+    <PackageReference Condition="'$(TargetsUap)' == 'true' and '$(DotNetBuildFromSource)' != 'true'" Include="Microsoft.DotNet.UAP.TestTools" Version="$(MicrosoftDotNetUapTestToolsPackageVersion)" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.NETCore.TestHost" Version="$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)" />
     <PackageReference Include="runtime.native.System.Data.SqlClient.sni" Version="$(RuntimeNativeSystemDataSqlClientSniPackageVersion)" />
     <PackageReference Include="Microsoft.NETCore.DotNetHost" Version="$(MicrosoftNETCoreDotNetHostPackageVersion)" />
@@ -53,7 +53,7 @@
 
   <!-- Retrieve the UAP Tools to the TestHost folder -->
   <Target Name="CopyUAPToolsToTestHost"
-          Condition="'$(TargetGroup)' == 'uap' and '$(DotNetBuildFromSource)' != 'true'"
+          Condition="'$(TargetsUap)' == 'true' and '$(DotNetBuildFromSource)' != 'true'"
           AfterTargets="AfterResolveReferences">
 
     <PropertyGroup>
